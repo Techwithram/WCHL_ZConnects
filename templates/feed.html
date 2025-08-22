@@ -28,7 +28,6 @@
         display: flex;
       }
 
-      /* Mini sidebar: avatar only */
       .sidebar {
         width: 80px;
         background: #fff;
@@ -123,7 +122,6 @@
         margin-top: 5px;
       }
 
-      /* Article Modal */
       .modal {
         display: none;
         position: fixed;
@@ -153,7 +151,6 @@
         color: red;
       }
 
-      /* Post actions */
       .post-actions {
         display: flex;
         justify-content: space-around;
@@ -214,7 +211,6 @@
     </style>
   </head>
   <body>
-    <!-- Navbar -->
     <div class="navbar">
       <div class="logo">Z CONNECTS</div>
       <div>
@@ -225,7 +221,6 @@
     </div>
 
     <div class="container">
-      <!-- Sidebar -->
       <div class="sidebar">
         <a href="profile.html" title="View Profile">
           <img
@@ -236,9 +231,7 @@
         </a>
       </div>
 
-      <!-- Main Content -->
       <div class="main-content">
-        <!-- Create Post (Frontend only) -->
         <div class="create-post">
           <div class="create-header">
             <input type="text" id="postCaption" placeholder="Start a post" />
@@ -258,7 +251,6 @@
           <input type="file" id="videoInput" accept="video/*" hidden />
         </div>
 
-        <!-- Feed -->
         <div id="feed" class="feed">
           {% for post in posts %}
           <div class="post">
@@ -272,8 +264,7 @@
               <div><strong>{{ post.user_id }}</strong></div>
             </div>
             <p>{{ post.content }}</p>
-
-            <!-- Comments -->
+            
             <div class="comment-section" style="display: block">
               {% for c in comments if c.post_id == post.post_id %}
               <div class="comment-item">
@@ -285,7 +276,6 @@
               </div>
               {% endfor %}
 
-              <!-- Add Comment (Backend integrated) -->
               <form
                 action="/add_comment"
                 method="post"
@@ -312,7 +302,6 @@
       </div>
     </div>
 
-    <!-- Article Modal -->
     <div class="modal" id="articleModal">
       <div class="modal-content">
         <span class="close-btn" id="closeArticle">&times;</span>
@@ -332,7 +321,6 @@
       let articleContent = "";
       const previewBox = document.getElementById("preview");
 
-      // Post button (Frontend-only posts)
       document.getElementById("postBtn").addEventListener("click", () => {
         const caption = document.getElementById("postCaption").value;
         const feed = document.getElementById("feed");
@@ -352,7 +340,6 @@
         previewBox.innerHTML = "";
       });
 
-      // File upload handlers (keep your existing code for preview etc.)
       document.getElementById("photoBtn").addEventListener("click", () => {
         document.getElementById("photoInput").click();
       });
@@ -380,7 +367,6 @@
         }
       });
 
-      // Article modal
       document.getElementById("writeArticle").addEventListener("click", () => {
         document.getElementById("articleModal").style.display = "flex";
       });
