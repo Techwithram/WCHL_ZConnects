@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Z Connects - Matches</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f3f2ef;
+      }
+      .navbar {
+        width: 100%;
+        background-image: linear-gradient(90deg, #6e8efb, #a777e3);
+        color: white;
+        padding: 12px 20px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      }
+      .container {
+        padding: 20px;
+      }
+      .match-card {
+        background: #fff;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .match-info {
+        font-size: 16px;
+      }
+      .chat-btn {
+        background: linear-gradient(90deg, #6e8efb, #a777e3);
+        border: none;
+        color: white;
+        padding: 8px 14px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: 0.3s;
+      }
+      .chat-btn:hover {
+        transform: scale(1.05);
+      }
+      .matches-container {
+        display: flex;
+        flex-direction: column; /* stack items vertically */
+        gap: 20px; /* spacing between match cards */
+        padding: 20px;
+      }
+
+      /* Each match card */
+      .match-card {
+        background: #fff;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="navbar">MATCHES</div>
+
+    <div class="matches-container">
+      {% for match in matches %}
+      <div class="match-card">
+        <div>
+          <p>
+            Matched with
+            <b
+              >{{ match.user_b_name if match.user_a_id == current_user else
+              match.user_a_name }}</b
+            >
+          </p>
+          <p>Score: {{ match.score | round(2) }}</p>
+        </div>
+        <a
+          href="/connections/{{ match.user_b_id if match.user_a_id == current_user else match.user_a_id }}"
+        >
+          <button class="chat-btn">Chat</button>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </body>
+</html>

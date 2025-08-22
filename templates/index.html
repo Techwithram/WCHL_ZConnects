@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Z Connects - Matches (Testing)</title>
+  </head>
+  <body>
+    <h1>AI Matches (Testing Only)</h1>
+    <table id="matches">
+      <tr>
+        <th>User A</th>
+        <th>User B</th>
+        <th>Score</th>
+        <th>Post</th>
+      </tr>
+    </table>
+
+    <script>
+      const api = "http://127.0.0.1:8000";
+
+      async function loadMatches() {
+        const res = await fetch(api + "/matches");
+        const data = await res.json();
+        const tbl = document.getElementById("matches");
+        tbl.innerHTML =
+          "<tr><th>User A</th><th>User B</th><th>Score</th><th>Post</th></tr>";
+        data.matches.forEach((m) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `<td>${m.user_a}</td><td>${m.user_b}</td><td>${(
+            m.score * 100
+          ).toFixed(1)}%</td><td>${m.post_id}</td>`;
+          tbl.appendChild(row);
+        });
+      }
+
+      setInterval(loadMatches, 30000); // every 30 sec
+      loadMatches();
+    </script>
+  </body>
+</html>

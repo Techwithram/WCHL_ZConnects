@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Z Connects</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f3f2ef;
+      }
+      .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: linear-gradient(90deg, #6e8efb, #a777e3);
+        color: white;
+        padding: 12px 20px;
+      }
+      .navbar a {
+        color: white;
+        margin: 0 10px;
+        text-decoration: none;
+        font-weight: bold;
+      }
+
+      .container {
+        display: flex;
+      }
+
+      /* Mini sidebar: avatar only */
+      .sidebar {
+        width: 80px;
+        background: #fff;
+        padding: 10px;
+        border-right: 1px solid #ddd;
+        height: 100vh;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+      }
+      .sidebar img {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        object-fit: cover;
+        cursor: pointer;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+      }
+
+      .main-content {
+        flex: 1;
+        padding: 20px;
+      }
+      .create-post {
+        background: #fff;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+      .create-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+      .create-header input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+      }
+
+      .create-options {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+      }
+      .option-btn,
+      .post-btn {
+        border: 1px solid transparent;
+        padding: 8px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      .option-btn {
+        background: #eee;
+      }
+      .option-btn:hover {
+        background: #6e8efb;
+        color: #fff;
+      }
+      .post-btn {
+        background: linear-gradient(90deg, #6e8efb, #a777e3);
+        color: #fff;
+        float: right;
+      }
+
+      .feed {
+        margin-top: 20px;
+      }
+      .post {
+        background: #fff;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      .preview {
+        border: 1px dashed #6e8efb;
+        padding: 10px;
+        margin-top: 10px;
+        border-radius: 8px;
+        background: #fafafa;
+        display: none;
+      }
+      .preview img,
+      .preview video {
+        max-width: 100%;
+        border-radius: 8px;
+        margin-top: 5px;
+      }
+
+      /* Article Modal */
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        justify-content: center;
+        align-items: center;
+      }
+      .modal-content {
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        width: 400px;
+      }
+      .modal textarea {
+        width: 100%;
+        height: 150px;
+        padding: 10px;
+      }
+      .close-btn {
+        float: right;
+        cursor: pointer;
+        color: red;
+      }
+
+      /* Post actions */
+      .post-actions {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 10px;
+        border-top: 1px solid #eee;
+        padding-top: 8px;
+      }
+      .action-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: #555;
+        transition: 0.3s;
+      }
+      .action-btn:hover {
+        color: #6e8efb;
+        transform: scale(1.05);
+      }
+      .like-count {
+        font-size: 14px;
+        color: #666;
+        margin-top: 5px;
+      }
+      .comment-section {
+        margin-top: 10px;
+        display: none;
+      }
+      .comment-input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        margin-bottom: 6px;
+      }
+      .comment-item {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 8px;
+      }
+      .comment-avatar {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        margin-right: 8px;
+        object-fit: cover;
+      }
+      .profile-pic {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <div class="navbar">
+      <div class="logo">Z CONNECTS</div>
+      <div>
+        <a href="/feed">Home</a>
+        <a href="/matches">Matches</a>
+        <a href="/connections">Connections</a>
+      </div>
+    </div>
+
+    <div class="container">
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <a href="profile.html" title="View Profile">
+          <img
+            id="sidebarPic"
+            src="https://www.w3schools.com/howto/img_avatar.png"
+            alt="Profile"
+          />
+        </a>
+      </div>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <!-- Create Post (Frontend only) -->
+        <div class="create-post">
+          <div class="create-header">
+            <input type="text" id="postCaption" placeholder="Start a post" />
+          </div>
+          <div class="create-options">
+            <button class="option-btn" id="photoBtn">📷 Photo</button>
+            <button class="option-btn" id="videoBtn">🎥 Video</button>
+            <button class="option-btn" id="writeArticle">
+              📝 Write Article
+            </button>
+            <button class="post-btn" id="postBtn" style="margin-left: auto">
+              Post
+            </button>
+          </div>
+          <div id="preview" class="preview"></div>
+          <input type="file" id="photoInput" accept="image/*" hidden />
+          <input type="file" id="videoInput" accept="video/*" hidden />
+        </div>
+
+        <!-- Feed -->
+        <div id="feed" class="feed">
+          {% for post in posts %}
+          <div class="post">
+            <div
+              style="display: flex; align-items: center; margin-bottom: 10px"
+            >
+              <img
+                src="https://www.w3schools.com/howto/img_avatar.png"
+                class="profile-pic"
+              />
+              <div><strong>{{ post.user_id }}</strong></div>
+            </div>
+            <p>{{ post.content }}</p>
+
+            <!-- Comments -->
+            <div class="comment-section" style="display: block">
+              {% for c in comments if c.post_id == post.post_id %}
+              <div class="comment-item">
+                <img
+                  src="https://www.w3schools.com/howto/img_avatar.png"
+                  class="comment-avatar"
+                />
+                <div><strong>{{ c.user_id }}</strong>: {{ c.text }}</div>
+              </div>
+              {% endfor %}
+
+              <!-- Add Comment (Backend integrated) -->
+              <form
+                action="/add_comment"
+                method="post"
+                style="margin-top: 10px"
+              >
+                <input
+                  type="hidden"
+                  name="post_id"
+                  value="{{ post.post_id }}"
+                />
+                <input
+                  type="text"
+                  name="text"
+                  class="comment-input"
+                  placeholder="Write a comment..."
+                  required
+                />
+                <button type="submit" class="action-btn">💬 Add</button>
+              </form>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Article Modal -->
+    <div class="modal" id="articleModal">
+      <div class="modal-content">
+        <span class="close-btn" id="closeArticle">&times;</span>
+        <h3>Write an Article</h3>
+        <textarea
+          id="articleText"
+          placeholder="Write your article here..."
+        ></textarea>
+        <button id="saveArticle" class="post-btn">Save</button>
+      </div>
+    </div>
+
+    <script>
+      const DEFAULT_AVATAR = "https://www.w3schools.com/howto/img_avatar.png";
+      let selectedFile = null;
+      let selectedType = null;
+      let articleContent = "";
+      const previewBox = document.getElementById("preview");
+
+      // Post button (Frontend-only posts)
+      document.getElementById("postBtn").addEventListener("click", () => {
+        const caption = document.getElementById("postCaption").value;
+        const feed = document.getElementById("feed");
+        if (!caption && !selectedFile && !articleContent) {
+          alert("Please add content to post.");
+          return;
+        }
+        const newPost = document.createElement("div");
+        newPost.classList.add("post");
+        newPost.innerHTML = `<p><strong>You</strong>: ${caption}</p>`;
+        feed.prepend(newPost);
+        document.getElementById("postCaption").value = "";
+        selectedFile = null;
+        selectedType = null;
+        articleContent = "";
+        previewBox.style.display = "none";
+        previewBox.innerHTML = "";
+      });
+
+      // File upload handlers (keep your existing code for preview etc.)
+      document.getElementById("photoBtn").addEventListener("click", () => {
+        document.getElementById("photoInput").click();
+      });
+      document.getElementById("videoBtn").addEventListener("click", () => {
+        document.getElementById("videoInput").click();
+      });
+      document.getElementById("photoInput").addEventListener("change", (e) => {
+        selectedFile = e.target.files[0];
+        selectedType = "photo";
+        if (selectedFile) {
+          previewBox.style.display = "block";
+          previewBox.innerHTML = `<img src="${URL.createObjectURL(
+            selectedFile
+          )}" alt="Preview">`;
+        }
+      });
+      document.getElementById("videoInput").addEventListener("change", (e) => {
+        selectedFile = e.target.files[0];
+        selectedType = "video";
+        if (selectedFile) {
+          previewBox.style.display = "block";
+          previewBox.innerHTML = `<video controls src="${URL.createObjectURL(
+            selectedFile
+          )}"></video>`;
+        }
+      });
+
+      // Article modal
+      document.getElementById("writeArticle").addEventListener("click", () => {
+        document.getElementById("articleModal").style.display = "flex";
+      });
+      document.getElementById("closeArticle").addEventListener("click", () => {
+        document.getElementById("articleModal").style.display = "none";
+      });
+      document.getElementById("saveArticle").addEventListener("click", () => {
+        articleContent = document.getElementById("articleText").value.trim();
+        if (!articleContent) {
+          alert("Write something for your article.");
+          return;
+        }
+        selectedType = "article";
+        previewBox.style.display = "block";
+        previewBox.innerHTML = `<p style="white-space:pre-wrap;">${articleContent}</p>`;
+        document.getElementById("articleModal").style.display = "none";
+      });
+      document.getElementById("articleModal").addEventListener("click", (e) => {
+        if (e.target.id === "articleModal")
+          e.currentTarget.style.display = "none";
+      });
+    </script>
+  </body>
+</html>
