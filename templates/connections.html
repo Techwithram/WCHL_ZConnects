@@ -27,9 +27,9 @@
         flex: 1;
         display: grid;
         grid-template-columns: 320px 1fr;
-        min-height: 0; 
+        min-height: 0; /* allow children to shrink */
       }
-    
+      /* Left: connections list */
       .left {
         background: #fff;
         border-right: 1px solid #ddd;
@@ -74,7 +74,7 @@
         font-weight: bold;
       }
 
-    
+      /* Right: chat area */
       .right {
         display: flex;
         flex-direction: column;
@@ -137,6 +137,67 @@
         padding: 24px;
         color: #666;
       }
+      .chat-box {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 10px;
+        height: 350px;
+        overflow-y: auto;
+        margin-bottom: 12px;
+        background: #f9f9f9;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .chat-bubble {
+        max-width: 70%;
+        padding: 10px 14px;
+        border-radius: 16px;
+        word-wrap: break-word;
+        font-size: 14px;
+      }
+
+      .chat-bubble.me {
+        align-self: flex-end;
+        background: linear-gradient(90deg, #6e8efb, #a777e3);
+        color: white;
+        border-bottom-right-radius: 4px;
+      }
+
+      .chat-bubble.other {
+        align-self: flex-start;
+        background: #e4e6eb;
+        color: #111;
+        border-bottom-left-radius: 4px;
+      }
+
+      .no-msg {
+        text-align: center;
+        color: #666;
+        font-style: italic;
+      }
+
+      .chat-input {
+        display: flex;
+        gap: 8px;
+      }
+
+      .chat-input input[type="text"] {
+        flex: 1;
+        padding: 8px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+      }
+
+      .chat-input button {
+        padding: 8px 14px;
+        background: linear-gradient(90deg, #6e8efb, #a777e3);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+      }
     </style>
   </head>
   <body>
@@ -150,6 +211,7 @@
     </div>
 
     <div class="layout">
+      <!-- LEFT: connections list -->
       <div class="left">
         <div class="section-title">Your Matches</div>
 
@@ -169,5 +231,36 @@
         {% endif %}
       </div>
     </div>
+    <!-- Chat Messages -->
+    <div class="chat-box">
+      {% if messages %} {% for msg in messages %} {% if msg.sender ==
+      current_user %}
+      <!-- Your message (right side) -->
+      <div class="chat-bubble me">
+        <p>{{ msg.message }}</p>
+      </div>
+      {% else %}
+      <!-- Other user's message (left side) -->
+      <div class="chat-bubble other">
+        <p>{{ msg.message }}</p>
+      </div>
+      {% endif %} {% endfor %} {% else %}
+      <p class="no-msg">No messages yet. Start the conversation!</p>
+      {% endif %}
+    </div>
+
+    <!-- Message Input -->
+    {% if active_user_id %}
+    <form action="/connections/send" method="post" class="chat-input">
+      <input type="hidden" name="to" value="{{ active_user_id }}" />
+      <input
+        type="text"
+        name="message"
+        placeholder="Type your message..."
+        required
+      />
+      <button type="submit">Send</button>
+    </form>
+    {% endif %}
   </body>
 </html>
